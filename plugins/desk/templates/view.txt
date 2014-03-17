@@ -1,2 +1,0 @@
-<p>Webhook URL: {$this->getHookUrl()}</p>
-<p><a href="{$this->getEditUrl()}" class="btn">Edit settings</a></p>
