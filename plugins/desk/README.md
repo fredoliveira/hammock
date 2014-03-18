@@ -12,4 +12,15 @@
 
 ### New comment:
 
-Still unimplemented.
+    {% for email in case.emails %}
+      {% if forloop.rindex0 == 0 %}
+        {
+          "type": "case_update",
+          "from": "{{email.from}}",
+          "body": "{{email.body}}",
+          "id": "{{case.id}}",
+          "url": "{{case.direct_url}}",
+          "subject": "{{case.subject}}"
+        }
+      {% endif %}
+    {% endfor %}

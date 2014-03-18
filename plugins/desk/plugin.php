@@ -28,11 +28,6 @@ class desk extends SlackServicePlugin {
     return $this->smarty->fetch('edit.html');
   }
 
-  # GET vars      : $req['get']
-  # POST vars     : $req['post']
-  # Raw POST body : $req['post_body']
-  # HTTP headers  : $req['headers']
-
   function onHook($req){
     if (!$this->icfg['channel']){
       return array(
@@ -54,26 +49,35 @@ class desk extends SlackServicePlugin {
       );
     }
 
+    # Handle new case payload
     if($desk_payload['type'] == "new_case") {
       $text .= $this->escapeText("#{$desk_payload['id']}: ");
       $text .= $this->escapeLink($desk_payload['url'], "{$desk_payload['subject']}");
       $text .= $this->escapeText(" opened by {$desk_payload['user']}");
-
-      # A more complicated version using attachments would
-      # look something like this:
-      #
-      # $this->postToChannel($text, array(
-      #   'channel'       => $this->icfg['channel'],
-      #   'username'      => $this->icfg['botname'],
-      #   'attachments'   => array(
-      #     array(
-      #       "text" => "{$desk_payload['description']}",
-      #       "color" => "#999999",
-      #     ),
-      #   )
-      # ));
-
+      
       return $this->sendMessage($text);
+    }
+
+    if($desk_payload['type'] == "case_update") {
+      $text .= $this->escapeText("#{$desk_payload['id']}: ");
+      $text .= $this->escapeLink($desk_payload['url'], "{$desk_payload['subject']}");
+      $text .= $this->escapeText(" email from {$desk_payload['from']}");
+
+      $this->postToChannel($text, array(
+        'channel'       => $this->icfg['channel'],
+        'username'      => $this->icfg['botname'],
+        'attachments'   => array(
+          array(
+            "text" => "{$desk_payload['body']}",
+            "color" => "#999999",
+          ),
+        )
+      ));
+
+      return array(
+        'ok' => true,
+        'status' => "Case update message sent",
+      );
     }
 
     return array(
