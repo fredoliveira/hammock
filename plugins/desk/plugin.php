@@ -66,6 +66,7 @@ class desk extends SlackServicePlugin {
       $this->postToChannel($text, array(
         'channel'       => $this->icfg['channel'],
         'username'      => $this->icfg['botname'],
+        'icon_emoji'    => ':ambulance:',
         'attachments'   => array(
           array(
             "text" => "{$desk_payload['body']}",
@@ -90,6 +91,7 @@ class desk extends SlackServicePlugin {
     $ret = $this->postToChannel($text, array(
       'channel'       => $this->icfg['channel'],
       'username'      => $this->icfg['botname'],
+      'icon_emoji'    => ':ambulance:',
     ));
 
     return array(
